@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Created by Bohdan on 22.08.2015.
@@ -22,14 +23,21 @@ public class VowelsService {
      */
     public static Map<String, Float> getVowelsInformation(List<String> source) {
 
-        Map<String, Float> vowelsInfo = new HashMap<>();
-        source.parallelStream()
+//        Map<String, Float> vowelsInfo = new HashMap<>();
+//        source.parallelStream()
+//                .filter(word -> WordInfo.getNumberOfVowels(word) > 0)
+//                .forEach(word ->
+//                        vowelsInfo.merge(format(WordInfo.getOrderedSetOfVowels(word).toString(), word.length())
+//                                , (float) WordInfo.getNumberOfVowels(word)
+//                                , (value, newValue) -> (value + newValue) / 2));
+        return source.stream()
                 .filter(word -> WordInfo.getNumberOfVowels(word) > 0)
-                .forEach(word ->
-                        vowelsInfo.merge(format(WordInfo.getOrderedSetOfVowels(word).toString(), word.length())
-                                , (float) WordInfo.getNumberOfVowels(word)
-                                , (value, newValue) -> (value + newValue) / 2));
-        return vowelsInfo;
+                .collect(Collectors.toMap(
+                        word -> format(WordInfo.getOrderedSetOfVowels(word).toString(), word.length()), // key
+                        word -> (float) WordInfo.getNumberOfVowels(word),                               // value
+                        (coef1, coef2) -> (coef1 + coef2) / 2                                           // if key is duplicated
+                ));
+        //return vowelsInfo;
     }
 
     private static String format(String setOfVowels, long numOfVowels) {
