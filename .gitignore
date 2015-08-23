@@ -1,0 +1,13 @@
+# Ignore IDE (eclipse / intellij) related files #
+target/
+.classpath
+.project
+.settings
+.idea
+.metadata
+*.iml
+*.ipr
+
+# Logs and databases #
+######################
+*.log
